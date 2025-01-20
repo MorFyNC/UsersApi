@@ -29,11 +29,20 @@ namespace TestApi3K.Service
 
         public async Task<IActionResult> CreateNewUserAndLoginAsync(CreateNewUserAndLogin newUser)
         {
+            var existinglogins = await _context.Logins.ToListAsync();
+            if (existinglogins.Any(x => x.Login.ToLower() == newUser.Login.ToLower()))
+            {
+                return new OkObjectResult(new { status = false, message = "Пользователь с таким логином уже существует" });
+            }
+
             var user = new Users()
             {
                 Name = newUser.Name,
                 Description = newUser.Description,
             };
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
 
             var login = new Logins()
             {
@@ -42,14 +51,6 @@ namespace TestApi3K.Service
                 Password = newUser.Password,
             };
 
-            var existinglogins = await _context.Logins.ToListAsync();
-            if (existinglogins.Any(x => x.Login.ToLower() == login.Login.ToLower()))
-            {
-                return new ConflictObjectResult(new { status = false, message = "Пользователь с таким логином уже существует" });
-            }
-
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
             await _context.Logins.AddAsync(login);
             await _context.SaveChangesAsync();
 
