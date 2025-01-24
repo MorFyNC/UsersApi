@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TestApi3K.Interfaces;
 using TestApi3K.Requests;
 
 namespace TestApi3K.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersLoginsController
@@ -19,6 +21,7 @@ namespace TestApi3K.Controllers
         [Route("getAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
+            Console.WriteLine("Обращение");
             return await _userLoginService.GetAllUsersAsync();
         }
 
@@ -28,5 +31,7 @@ namespace TestApi3K.Controllers
         {
             return await _userLoginService.CreateNewUserAndLoginAsync(newUser);
         }
+
+        
     }
 }

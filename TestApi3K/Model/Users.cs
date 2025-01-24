@@ -9,7 +9,7 @@ namespace TestApi3K.Model
         public int id_User { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Role { get; set; }
 
-        public bool isAdmin { get; set; }
     }
 }
